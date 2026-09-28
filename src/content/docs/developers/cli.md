@@ -26,7 +26,7 @@ panel button does, so you can script ozen or drive it from an agent.
 | `ozen show [N]` | Last N lines, with tagged speakers and fixed text. |
 | `ozen look [N]` | Screenshot to `~/ozen/screen-small.png`, then the last N lines (default 40). |
 | `ozen fix <line-id> "right text"` | Correct a line's text; empty restores it. Relearns hint words and corrections. |
-| `ozen tag <line-id> "Name"` | Say who said a line; empty clears. Retrains and pushes the registry. |
+| `ozen tag <line-id> "Name"` | Say who said a line; empty clears. Retrains. |
 | `ozen ignore <line-id>...` | Mark lines as a voice to ignore. Retrains. |
 | `ozen retrain` | Rebuild voiceprints, labels, ignored voices and accuracy from all tags. Tagging does this for you. |
 
