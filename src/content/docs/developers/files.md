@@ -1,4 +1,9 @@
-# Files and data
+---
+title: Files and data
+description: Where ozen keeps everything on your Mac.
+sidebar:
+  order: 3
+---
 
 Everything ozen keeps is in your ozen folder, `~/ozen`, on your Mac. The only thing that leaves it is the voices
 registry, which you host.
@@ -26,7 +31,7 @@ aren't committed by accident.
 
 ## Deleting data
 
-- A meeting: `delete_meeting` over [MCP](mcp.md), which removes its lines, fixes and tags.
+- A meeting: `delete_meeting` over [MCP](/developers/mcp/), which removes its lines, fixes and tags.
 - Specific lines: `delete_lines` over MCP.
 - A person on this Mac: `delete_person` over MCP. Remove them from the registry too, or other Macs keep them.
 - Everything: stop ozen and delete `~/ozen`, and the registry repository if you no longer need it.

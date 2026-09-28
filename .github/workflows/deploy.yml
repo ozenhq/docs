@@ -13,12 +13,14 @@ jobs:
       deployments: write
     steps:
       - uses: actions/checkout@v4
-      - uses: peaceiris/actions-mdbook@v2
+      - uses: actions/setup-node@v4
         with:
-          mdbook-version: latest
-      - run: mdbook build
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 310eb46da2d4df89cd07c84b9ad90243
-          command: pages deploy book --project-name ozen-docs --branch ${{ github.head_ref || github.ref_name }}
+          command: pages deploy dist --project-name ozen-docs --branch ${{ github.head_ref || github.ref_name }}

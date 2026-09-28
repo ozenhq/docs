@@ -1,0 +1,57 @@
+---
+title: Private meeting copilot for Mac
+description: Your private meeting copilot for Mac. Transcribes calls in Hebrew and English, knows who is speaking, and never sends audio anywhere.
+template: splash
+hero:
+  title: Every meeting, remembered. On your Mac.
+  tagline: ozen (אוזן, “ear”) listens to your calls and the room, writes down who said what in Hebrew and English, and lets an AI assistant answer questions about the meeting while it happens. No bot joins your call. No audio leaves your Mac.
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: Get started
+      link: /start/install/
+      icon: right-arrow
+    - text: Your first meeting
+      link: /start/first-meeting/
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import PanelDemo from '../../components/PanelDemo.astro';
+
+## Try it right here
+
+This is what ozen looks like during a call. Go ahead and click things.
+
+<PanelDemo />
+
+## What ozen does for you
+
+<CardGrid stagger>
+	<Card title="Writes everything down" icon="document">
+		Every word of the call and of the people in the room, in Hebrew or English, a few seconds after it's said.
+	</Card>
+	<Card title="Knows who's talking" icon="comment">
+		Recognizes voices. Tell it once who someone is and it remembers them in every future meeting.
+	</Card>
+	<Card title="Gets smarter as you go" icon="rocket">
+		Fix a misheard word and ozen learns it. Fix the same mistake twice and it corrects it by itself.
+	</Card>
+	<Card title="Ask AI mid-meeting" icon="star">
+		One click opens an AI assistant that has read the meeting so far and can see your screen.
+	</Card>
+	<Card title="Records only when you want" icon="setting">
+		Always, only during calls, or by place: on at the office, off at home.
+	</Card>
+	<Card title="Private by design" icon="approve-check">
+		Transcription happens on your Mac. Nothing is uploaded, and no one gets an "ozen joined the meeting" notice.
+	</Card>
+</CardGrid>
+
+## Where to next
+
+<CardGrid>
+	<LinkCard title="Install ozen" description="About 15 minutes, once." href="/start/install/" />
+	<LinkCard title="Your first meeting" description="From Start to Ask AI in seven steps." href="/start/first-meeting/" />
+	<LinkCard title="Privacy" description="What stays on your Mac, and your responsibilities when recording others." href="/help/privacy/" />
+</CardGrid>

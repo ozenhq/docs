@@ -1,0 +1,54 @@
+---
+title: When ozen records
+description: Always, only during meetings, or depending on where you are.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import ModeDemo from '../../../components/ModeDemo.astro';
+
+## Two modes
+
+Pick one with the **Always / Meetings** switch in the panel.
+
+- **Always** records from the moment you press **Start** until you pause or stop, including everything said near
+  your Mac.
+- **Meetings** starts by itself when Zoom, Chrome (Google Meet), Teams, Slack, FaceTime or Discord starts using your
+  microphone, and stops 20 seconds after the call ends. No calendar or plugin needed.
+
+<ModeDemo />
+
+Pressing Pause or Start yourself always wins, until the next meeting starts or ends.
+
+## What ozen hears
+
+| | What it is | Written down? |
+|---|---|---|
+| **Call** | Sound from your meeting apps | Yes, marked `(call)` |
+| **Room** | Your microphone: you and anyone near your Mac | Yes, marked `(room)` |
+| **Computer** | Every other app, like a video or music | No. ozen only uses it to avoid mistaking your speakers for a person in the room |
+
+## Places
+
+Places let ozen behave differently depending on where you are. Open **Places…** from the panel.
+
+Each place has a name, a spot on the map, a size, and one of three settings:
+
+| Setting | While you're there |
+|---|---|
+| **Auto record** | Always record |
+| **Record meetings only** | Record only during calls |
+| **Auto off** | Never record |
+
+Inside a place, its setting replaces Always / Meetings. Outside all places, your usual mode applies.
+
+**Home** and **Work** are already in the list, waiting for you to set where they are. To place one, either:
+
+- press **Use current location** while you're there,
+- press **Pick on map** and click the spot,
+- drag its pin on the map, or
+- type its latitude and longitude.
+
+<Aside type="note">
+The first time, macOS asks to let Ozen use your location. Your location stays on your Mac. Showing the map
+downloads map images of that area from OpenStreetMap.
+</Aside>

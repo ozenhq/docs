@@ -1,0 +1,65 @@
+/* ozen brand: warm red "recording" ear on calm ink neutrals. */
+:root {
+	--sl-font: 'Rubik Variable', system-ui, sans-serif;
+	--ozen-rec: #e5484d;
+	--ozen-warn: #f5a524;
+	--sl-color-accent-low: #3b1219;
+	--sl-color-accent: #e5484d;
+	--sl-color-accent-high: #ff9a9e;
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #eceef2;
+	--sl-color-gray-2: #c5c9d3;
+	--sl-color-gray-3: #9096a5;
+	--sl-color-gray-4: #5b6173;
+	--sl-color-gray-5: #3a3f4d;
+	--sl-color-gray-6: #262a35;
+	--sl-color-black: #16181f;
+}
+:root[data-theme='light'] {
+	--sl-color-accent-low: #ffe4e5;
+	--sl-color-accent: #c4262c;
+	--sl-color-accent-high: #5c1115;
+	--sl-color-white: #16181f;
+	--sl-color-gray-1: #262a35;
+	--sl-color-gray-2: #3a3f4d;
+	--sl-color-gray-3: #5b6173;
+	--sl-color-gray-4: #9096a5;
+	--sl-color-gray-5: #c5c9d3;
+	--sl-color-gray-6: #eceef2;
+	--sl-color-gray-7: #f6f7f9;
+	--sl-color-black: #ffffff;
+}
+
+.site-title img { height: 1.6rem; }
+
+/* Splash hero: soft glow behind the ear */
+.hero { position: relative; }
+.hero::before {
+	content: '';
+	position: absolute;
+	inset: -10% 10% auto auto;
+	width: 28rem;
+	height: 28rem;
+	background: radial-gradient(circle, color-mix(in srgb, var(--ozen-rec) 28%, transparent), transparent 65%);
+	filter: blur(20px);
+	z-index: -1;
+	pointer-events: none;
+}
+
+/* Shared frame for the interactive demos */
+.demo {
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 14px;
+	background: var(--sl-color-black);
+	box-shadow: 0 12px 40px -18px rgb(0 0 0 / 0.45);
+	padding: 1rem;
+	margin-block: 1.5rem;
+	font-size: 0.92rem;
+}
+.demo-caption {
+	font-size: 0.8rem;
+	color: var(--sl-color-gray-3);
+	margin-top: 0.5rem !important;
+	text-align: center;
+}
+.demo button { font: inherit; cursor: pointer; }

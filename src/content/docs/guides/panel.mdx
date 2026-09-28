@@ -1,0 +1,65 @@
+---
+title: The menu bar panel
+description: Everything you can see and do from ozen's ear icon.
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import PanelDemo from '../../../components/PanelDemo.astro';
+import IconStates from '../../../components/IconStates.astro';
+
+ozen lives in the menu bar as an ear. **Click** it to open the panel. **Right-click** it for a quick menu with
+the same controls.
+
+<PanelDemo />
+
+## What the ear means
+
+<IconStates />
+
+When ozen isn't recording, the panel says **Not recording** and why.
+
+## Buttons
+
+| Button | What it does |
+|---|---|
+| **Start** | Start listening to the call and the room. |
+| **Pause** / **Resume** | Take a break. Resuming is instant. |
+| **Stop** | Stop listening. ozen finishes writing down what it already heard first. |
+| **Always / Meetings** | Choose when ozen records. See [When ozen records](/guides/recording/). |
+| **Places…** | Record differently at home, at work, anywhere. See [Places](/guides/recording/#places). |
+| **Review** | Answer who said the lines ozen is unsure about. See [Review](/guides/speakers/#review). |
+| **Ask AI** | Ask an AI assistant about the meeting happening now. See [AI assistants](/guides/ai/). |
+
+## Three views
+
+<Tabs>
+<TabItem label="Transcript">
+The live transcript, updated every 2 seconds.
+
+- Click a **name** to say who really said that line, or to ignore that voice.
+- Click the **text** to fix it.
+- An orange **?** means ozen isn't sure who spoke.
+- Grey lines are voices you chose to ignore.
+</TabItem>
+<TabItem label="Timeline">
+One row per person with their total talk time, and a bar for everything they said. When people talk over each
+other, their bars overlap.
+
+- **−** and **+** zoom in and out.
+- Long silences (over 2 minutes) shrink to a small gap.
+- Hover a bar to read it; click it to jump to that line.
+</TabItem>
+<TabItem label="Meetings">
+All your past meetings, newest first. A silence of 10 minutes or more starts a new meeting.
+
+Select one or several (hold <kbd>⌘</kbd> or <kbd>⇧</kbd> while clicking) and press **Open** to hand them to an
+AI assistant. See [AI assistants](/guides/ai/#past-meetings).
+
+The bottom of the panel shows how accurately ozen recognizes voices, now and when you started.
+</TabItem>
+</Tabs>
+
+<Aside title="Warnings">
+If something's wrong, like a missing permission or a silent microphone, a warning appears at the top of the panel.
+[Troubleshooting](/help/troubleshooting/) explains each one.
+</Aside>

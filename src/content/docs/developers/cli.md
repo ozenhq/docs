@@ -1,4 +1,9 @@
-# Command line
+---
+title: Command line
+description: Every ozen command, for scripting and power users.
+sidebar:
+  order: 1
+---
 
 The `ozen` binary is built to `~/ozen/target/release/ozen`. It works from any directory. Most commands do what a
 panel button does, so you can script ozen or drive it from an agent.
@@ -12,7 +17,7 @@ panel button does, so you can script ozen or drive it from an agent.
 | `ozen resume` | Resume after a pause. |
 | `ozen stop` | Stop, finish transcribing queued audio (up to 2 minutes), then unload. |
 | `ozen status` | Print `recording`, `paused`, `stopping` or `stopped`. |
-| `ozen health` | Print one line per problem the panel warns about; nothing when all is well. See [Troubleshooting](troubleshooting.md). |
+| `ozen health` | Print one line per problem the panel warns about; nothing when all is well. See [Troubleshooting](/help/troubleshooting/). |
 
 ## Transcript
 
@@ -33,7 +38,7 @@ panel button does, so you can script ozen or drive it from an agent.
 | `ozen gather [--kev] ID...` | Write those meetings to `~/ozen/context/<now>/` and print the folder. `--kev` adds meetings Kev judges related. |
 | `ozen live [--open claude\|hermes]` | Write the current meeting to `~/ozen/context/live/`, keep it updated every 15 s until the meeting ends, and print the folder. `--open` starts that agent there. |
 | `ozen open DIR claude\|hermes\|finder` | Open a folder written by `gather` or `live` in that agent, or in Finder. |
-| `ozen mcp` | Run the [MCP server](mcp.md) on stdio. |
+| `ozen mcp` | Run the [MCP server](/developers/mcp/) on stdio. |
 
 ## App
 
@@ -46,5 +51,5 @@ panel button does, so you can script ozen or drive it from an agent.
 
 | Command | What it does |
 |---|---|
-| `ozen eval [--vocab 0,10,30] [--repeat 0,1,2] [--real] [--fresh]` | Score learning settings; see [Tuning how fixes teach](tuning.md). |
+| `ozen eval [--vocab 0,10,30] [--repeat 0,1,2] [--real] [--fresh]` | Score learning settings; see [Tuning how fixes teach](/developers/tuning/). |
 | `uv run eval.py [N]` | Transcribe your last N real chunks with stock, Hebrew and Hebrew+vocabulary models, to compare on your own speech. Run from `~/ozen`. |

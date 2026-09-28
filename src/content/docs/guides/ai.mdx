@@ -1,0 +1,45 @@
+---
+title: AI assistants
+description: Ask an AI about the meeting happening now, or about past meetings.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+ozen can hand your meetings to an AI assistant, **Claude Code** or **Hermes**, which reads the transcript and
+answers your questions. You need one of them installed first.
+
+## Ask about the meeting happening now
+
+Press **Ask AI** in the panel. A Terminal window opens with the assistant, already holding the meeting so far.
+It keeps up as the meeting continues and can look at your screen. Try:
+
+- *"Summarize the last five minutes."*
+- *"What did Dana ask me to do?"*
+- *"What's on my screen, and does it match what they're describing?"*
+- *"Draft a follow-up email with the decisions we made."*
+
+## Past meetings
+
+<Steps>
+1. Switch the panel to **Meetings**.
+2. Select one or several (hold <kbd>⌘</kbd> or <kbd>⇧</kbd> while clicking).
+3. Press **Open** and pick the assistant.
+</Steps>
+
+Great for *"What did we promise the client across these three calls?"* or *"Write the weekly update."*
+
+Each opened set is saved as a folder; double-click its **claude.command** or **hermes.command** file to come
+back to it later.
+
+**Auto add with Kev** finds other meetings about the same project and adds them for you. It needs the Kev helper
+running on your Mac; without it, this option does nothing.
+
+<Aside type="caution" title="What the AI sees">
+A cloud assistant like Claude sends what it reads to its provider. Only the meetings you choose are shared.
+See [Privacy](/help/privacy/).
+</Aside>
+
+## Other AI apps
+
+Any AI app that supports MCP (a common way for AI apps to use tools) can read and edit ozen's meetings, people and
+settings. Setup is in [MCP server](/developers/mcp/).

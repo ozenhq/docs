@@ -1,0 +1,63 @@
+---
+title: Troubleshooting
+description: What each warning means and how to fix it.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+When something's wrong, a warning appears at the top of the panel. Find it below.
+
+## “Recording blocked”
+
+ozen doesn't have permission to hear your meeting apps.
+
+1. Open **System Settings › Privacy & Security › Screen & System Audio Recording**.
+2. Turn on **Ozen**.
+3. Press **Start** again.
+
+If people in the room aren't showing up, do the same under **Microphone**.
+
+## “Recording on hold: the screen is asleep or locked”
+
+macOS pauses ozen's listening while your screen sleeps or is locked. It picks up again when you wake your Mac.
+
+## “Microphone is silent”
+
+The microphone your Mac is using isn't picking up sound. Open **System Settings › Sound › Input** and choose
+another one.
+
+If the warning says ozen is **using** one microphone **because** another is silent, ozen already switched to one
+that works. You only need to act if you prefer a different one.
+
+## “Transcriber stopped” or “catching up”
+
+- **Stopped:** the part of ozen that writes things down crashed. It restarts by itself and nothing you said is
+  lost.
+- **Catching up:** it's running behind, which is normal in your first meeting while speech models download.
+  Lines arrive late, but they all arrive.
+
+## Nothing from the call shows up
+
+- Is the call in Zoom, Chrome, Teams, Slack, FaceTime or Discord? Calls in other apps, like Safari, aren't written
+  down.
+- In **Meetings** mode, ozen waits until the meeting app turns on your microphone. Press **Start** to record right
+  away.
+
+## Wrong names
+
+Name a couple of lines per person and answer **Review**. Each answer relabels the whole meeting.
+See [Who is speaking](/guides/speakers/).
+
+## A video, or my Mac reading aloud, shows up as a person
+
+Click its name and choose **Ignore this voice**.
+
+## Permissions disappeared after an update
+
+Update with the command in [Updating](/start/install/#updating), which keeps permissions. Copying the app by hand
+doesn't.
+
+<Aside title="Still stuck?">
+Open an issue at [github.com/ozenhq/docs](https://github.com/ozenhq/docs/issues) with what the panel says. If
+you're comfortable in Terminal, include the output of `~/ozen/target/release/ozen health`.
+</Aside>
