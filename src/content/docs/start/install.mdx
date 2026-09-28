@@ -52,11 +52,12 @@ each step below says exactly what to copy. Plan on about 15 minutes, most of it 
    gh auth login
    ```
 
-6. **Download and build ozen.** The last command takes a few minutes.
+6. **Download and build ozen.** The second command makes the private folder where ozen keeps the voices it
+   learns. The last command takes a few minutes.
 
    ```sh
    gh repo clone ozenhq/ozen ~/ozen
-   gh repo clone tupe12334/voices-embedding-registry ~/ozen/voices
+   git init -q ~/ozen/voices
    cd ~/ozen && cargo run --release -- app
    ```
 
@@ -92,8 +93,3 @@ cd ~/ozen && git pull && cargo run --release -- app
 ```
 
 Updating never interrupts a recording in progress, and your permissions stay.
-
-## Using ozen on a second Mac
-
-Repeat the setup on the other Mac. People you name on one Mac are recognized on the other within a few minutes.
-See [Using several Macs](/guides/multi-mac/).

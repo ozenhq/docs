@@ -18,7 +18,7 @@ export default defineConfig({
 				{ label: 'Get started', items: ['start/install', 'start/first-meeting'] },
 				{
 					label: 'Everyday use',
-					items: ['guides/panel', 'guides/recording', 'guides/speakers', 'guides/corrections', 'guides/ai', 'guides/multi-mac'],
+					items: ['guides/panel', 'guides/recording', 'guides/speakers', 'guides/corrections', 'guides/ai'],
 				},
 				{ label: 'Help', items: ['help/troubleshooting', 'help/privacy', 'help/limits'] },
 				{ label: 'For developers', collapsed: true, items: [{ autogenerate: { directory: 'developers' } }] },

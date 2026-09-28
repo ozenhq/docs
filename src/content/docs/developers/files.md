@@ -5,8 +5,7 @@ sidebar:
   order: 3
 ---
 
-Everything ozen keeps is in your ozen folder, `~/ozen`, on your Mac. The only thing that leaves it is the voices
-registry, which you host.
+Everything ozen keeps is in your ozen folder, `~/ozen`, on your Mac.
 
 | Path | What it holds | Shared? |
 |---|---|---|
@@ -19,7 +18,7 @@ registry, which you host.
 | `ignore.json` | Voiceprints of ignored voices | No |
 | `vocab.txt` | Terms the transcriber should spell right; edit freely | No (in the ozen repo) |
 | `places.json` | Your places, including where you live and work | No |
-| `voices/` | The voices registry: names, voiceprints, accuracy history | **Yes**, with your other Macs through its git remote |
+| `voices/` | Names, voiceprints and accuracy history. Its own local git repository; keep it one | No |
 | `context/` | Folders written for AI agents | No |
 | `chunks/` | Audio waiting to be transcribed; deleted once transcribed | No |
 | `recent/` | The last 20 transcribed chunks, for `eval.py`. Set `OZEN_KEEP_AUDIO=0` to keep none | No |
@@ -33,5 +32,5 @@ aren't committed by accident.
 
 - A meeting: `delete_meeting` over [MCP](/developers/mcp/), which removes its lines, fixes and tags.
 - Specific lines: `delete_lines` over MCP.
-- A person on this Mac: `delete_person` over MCP. Remove them from the registry too, or other Macs keep them.
-- Everything: stop ozen and delete `~/ozen`, and the registry repository if you no longer need it.
+- A person: `delete_person` over MCP.
+- Everything: stop ozen and delete `~/ozen`.
