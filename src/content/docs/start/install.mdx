@@ -1,70 +1,14 @@
 ---
 title: Install ozen
-description: Set up ozen on your Mac in about 15 minutes.
+description: Download ozen for free and set it up on your Mac in about 10 minutes.
 ---
 
-import { Steps, Aside, Card } from '@astrojs/starlight/components';
+import { Aside, LinkCard } from '@astrojs/starlight/components';
 
-ozen is in early access, so installing it means pasting a few commands into Terminal. You only do this once, and
-each step below says exactly what to copy. Plan on about 15 minutes, most of it waiting for downloads.
+ozen is free. Download it from the download page, which also has the few Terminal commands that set it up.
+You only do this once; plan on about 10 minutes, most of it waiting for downloads.
 
-<Card title="You'll need" icon="list-format">
-- A Mac with an Apple chip (M1 or newer) running macOS 15 Sequoia or later
-- An invite to ozen on GitHub (ask whoever shared ozen with you)
-- About 10 GB of free space, mostly for speech models
-</Card>
-
-## Setup
-
-<Steps>
-
-1. **Open Terminal.** Press <kbd>⌘</kbd> <kbd>Space</kbd>, type **Terminal**, press <kbd>Return</kbd>.
-   To run a command below, click the copy button on it, paste it into Terminal with <kbd>⌘</kbd> <kbd>V</kbd>,
-   and press <kbd>Return</kbd>.
-
-2. **Install Apple's developer tools.** A window pops up; click **Install** and wait for it to finish.
-
-   ```sh
-   xcode-select --install
-   ```
-
-   If it says they're already installed, move on.
-
-3. **Install Homebrew**, the standard way to add tools to a Mac. It asks for your Mac password (typing shows
-   nothing; that's normal).
-
-   ```sh
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   ```
-
-   When it finishes, it prints **Next steps** with two or three commands. Copy and run those too.
-
-4. **Install the tools ozen is built with.**
-
-   ```sh
-   brew install rust uv ffmpeg gh
-   ```
-
-5. **Sign in to GitHub** so you can download ozen. Pick **GitHub.com**, then **Login with a web browser**, and
-   follow along.
-
-   ```sh
-   gh auth login
-   ```
-
-6. **Download and build ozen.** The second command makes the private folder where ozen keeps the voices it
-   learns. The last command takes a few minutes.
-
-   ```sh
-   gh repo clone ozenhq/ozen ~/ozen
-   git init -q ~/ozen/voices
-   cd ~/ozen && cargo run --release -- app
-   ```
-
-7. **Open ozen.** Press <kbd>⌘</kbd> <kbd>Space</kbd>, type **Ozen**, press <kbd>Return</kbd>. An ear appears in
-   the menu bar at the top of your screen. ozen has no Dock icon; the ear is the app.
-
-</Steps>
+<LinkCard title="Download ozen" description="Pick your computer, then follow the install steps there." href="https://ozenhq.com/download/" />
 
 ## Allow ozen to listen
 
@@ -86,10 +30,5 @@ late and the panel may say it's catching up. After that, everything runs offline
 
 ## Updating
 
-When there's a new version, open Terminal and run:
-
-```sh
-cd ~/ozen && git pull && cargo run --release -- app
-```
-
+When there's a new version, follow [Updating on the download page](https://ozenhq.com/download/#update).
 Updating never interrupts a recording in progress, and your permissions stay.
