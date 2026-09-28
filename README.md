@@ -1,16 +1,18 @@
 # ozen docs
 
-User guide for [ozen](https://github.com/ozenhq/ozen), the local meeting copilot for macOS.
-Start reading at [src/introduction.md](src/introduction.md), or build the site:
+User guide for [ozen](https://github.com/ozenhq/ozen), the private meeting copilot for macOS.
+Live at <https://docs.ozenhq.com>. Built with [Starlight](https://starlight.astro.build).
 
 ```sh
-cargo install mdbook   # once
-mdbook serve --open    # live preview at http://localhost:3000
+npm install
+npm run dev      # live preview at http://localhost:4321
+npm run build    # static site in dist/
 ```
 
-Live at <https://docs.ozenhq.com> (Cloudflare Pages project `ozen-docs`). Every push to `main` deploys;
-pull requests get a preview URL. See [.github/workflows/deploy.yml](.github/workflows/deploy.yml).
+- Pages: `src/content/docs/` (Markdown or MDX). Sidebar: `astro.config.mjs`.
+- Interactive demos: `src/components/`. Brand colors: `src/styles/theme.css`.
+- Deploys to Cloudflare Pages (`ozen-docs`) on every push to `main`; pull requests get a preview URL.
+  See [.github/workflows/deploy.yml](.github/workflows/deploy.yml).
 
-Pages are plain Markdown under `src/`; the table of contents is [src/SUMMARY.md](src/SUMMARY.md).
-When ozen changes behavior, update the page that describes it in the same week. Tunable values
-(thresholds, intervals, limits) are linked to the ozen source rather than copied here.
+Write for people who aren't developers: plain words, one task per page. Terminal commands, file formats and
+the MCP API belong under `developers/`. When ozen changes behavior, update the page that describes it.

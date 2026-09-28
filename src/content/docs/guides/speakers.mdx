@@ -1,0 +1,58 @@
+---
+title: Who is speaking
+description: How ozen recognizes voices, and how to teach it names.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+ozen recognizes people by their voice. Someone keeps the same label for the whole meeting, and once you've told
+ozen their name, it recognizes them in future meetings too, on all your Macs.
+
+New voices appear as **S1**, **S2**, … until you name them.
+
+## Naming someone
+
+<Steps>
+1. Click the name on any line they said, like **S2**.
+2. Pick their name from the list, or type a new one and press <kbd>Return</kbd>.
+</Steps>
+
+Within a few seconds ozen updates its memory of that voice and relabels every line in the meeting, including
+earlier ones. A couple of names per person early in a meeting usually fixes the rest.
+
+Made a mistake? Click the name again and choose **Clear tag**.
+
+## Review
+
+When ozen isn't sure who said something, it puts an orange **?** next to the name. The **Review** button counts
+those lines. Press it and ozen jumps to the one it's least sure about and asks who said it.
+
+Review only asks about the last 10 minutes, while you still remember.
+
+<Aside type="tip" title="The fastest way to better names">
+Answering Review teaches ozen much faster than naming random lines, because it asks exactly where it's confused.
+In a test with four similar voices, 12 answers to Review got every line right.
+</Aside>
+
+## Ignoring a voice
+
+A TV, a video next to your Mac, or a podcast isn't part of your meeting. Click its name and choose:
+
+- **Ignore this voice** for that voice, or
+- **Ignore all lines by S3** to clear everything it said nearby at once.
+
+Those lines turn grey, and ozen stops writing that voice down. To undo, name the line as a person, or choose
+**Clear tag**.
+
+## People talking at once
+
+When two people talk over each other, ozen separates them, and each gets their own line. On the Timeline, their
+bars overlap.
+
+## Echo from your speakers
+
+If your call plays through speakers, the microphone hears it too. ozen notices that the "room" voice is actually
+the call playing back and drops the duplicate. The same goes for your computer reading text aloud.
+
+Someone in the room talking over the call still gets their own line, because their voice doesn't match what was
+playing.

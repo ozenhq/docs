@@ -1,6 +1,11 @@
-# Tuning how fixes teach
+---
+title: Tuning how fixes teach
+description: Score learning settings with ozen eval.
+sidebar:
+  order: 4
+---
 
-Two settings decide how ozen learns from [your fixes](corrections.md): how many learned words are hinted to the
+Two settings decide how ozen learns from [your fixes](/guides/corrections/): how many learned words are hinted to the
 transcriber, and how many times a correction must repeat before ozen applies it by itself. `ozen eval` scores
 combinations of both so you can pick the best.
 

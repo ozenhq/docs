@@ -1,4 +1,9 @@
-# MCP server
+---
+title: MCP server
+description: Connect any MCP-capable AI app to ozen.
+sidebar:
+  order: 2
+---
 
 `ozen mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server on stdio. It lets any MCP-capable
 agent read and edit what ozen keeps: meetings, transcript lines, people, places, vocabulary, and recording.

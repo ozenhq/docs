@@ -1,0 +1,368 @@
+---
+// A playable imitation of ozen's menu bar panel. Mirrors real behavior:
+// tagging names a voice everywhere, ignoring greys it out, fixing text teaches words.
+---
+
+<div class="demo panel not-content" data-panel-demo>
+	<div class="bar">
+		<span class="ear" aria-hidden="true">
+			<svg viewBox="0 0 32 32" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 13a7.5 7.5 0 0 1 15 0c0 4.2-3.2 5.2-4.2 8.4C18.9 24.6 17.6 27 14.6 27A4.2 4.2 0 0 1 10.5 24"/><path d="M13.4 13a3.1 3.1 0 0 1 6.2 0c0 2.1-2.3 2.6-2.3 4.8"/></svg>
+		</span>
+		<span class="status" data-status>Recording</span>
+		<span class="spacer"></span>
+		<button class="btn" data-pause>Pause</button>
+		<button class="btn" data-stop>Stop</button>
+	</div>
+	<div class="tabs" role="tablist">
+		<button role="tab" aria-selected="true" data-tab="transcript">Transcript</button>
+		<button role="tab" aria-selected="false" data-tab="timeline">Timeline</button>
+		<span class="spacer"></span>
+		<button class="review" data-review hidden></button>
+	</div>
+	<ol class="lines" data-view="transcript"></ol>
+	<div class="timeline" data-view="timeline" hidden></div>
+	<div class="menu" data-menu hidden role="menu"></div>
+	<div class="toast" data-toast aria-live="polite"></div>
+</div>
+<p class="demo-caption">Try it: click a speaker name to say who it is, or click the text to fix a word.</p>
+
+<style is:global>
+	.panel [hidden] { display: none !important; }
+	.panel { position: relative; max-width: 42rem; margin-inline: auto; }
+	.panel .bar, .panel .tabs { display: flex; align-items: center; gap: 0.5rem; }
+	.panel .spacer { flex: 1; }
+	.panel .ear svg { width: 1.6rem; height: 1.6rem; stroke: var(--sl-color-gray-3); transition: stroke 0.2s, fill 0.2s; }
+	.panel[data-state='recording'] .ear svg { stroke: var(--ozen-rec); fill: color-mix(in srgb, var(--ozen-rec) 25%, transparent); }
+	.panel .status { font-weight: 600; }
+	.panel .btn, .panel .tabs [role='tab'], .panel .review {
+		border: 1px solid var(--sl-color-gray-5);
+		background: var(--sl-color-gray-6);
+		color: var(--sl-color-white);
+		border-radius: 8px;
+		padding: 0.2rem 0.7rem;
+	}
+	.panel .btn:hover, .panel .tabs [role='tab']:hover { border-color: var(--sl-color-gray-3); }
+	.panel .tabs { margin-top: 0.8rem; }
+	.panel .tabs [aria-selected='true'] { background: var(--sl-color-accent-low); border-color: var(--sl-color-accent); }
+	.panel .review { border-color: var(--ozen-warn); color: var(--ozen-warn); background: transparent; }
+	.panel .lines { list-style: none; padding: 0; margin: 0.8rem 0 0; display: grid; gap: 0.15rem; }
+	.panel .lines li {
+		display: grid;
+		grid-template-columns: 3.2rem auto 1fr;
+		gap: 0.6rem;
+		align-items: baseline;
+		padding: 0.35rem 0.5rem;
+		border-radius: 8px;
+		margin: 0;
+		transition: background 0.4s, opacity 0.3s;
+	}
+	.panel .lines li.flash { background: color-mix(in srgb, var(--sl-color-accent) 18%, transparent); }
+	.panel .lines li.ignored { opacity: 0.35; }
+	.panel .time { color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+	.panel .who {
+		border: none;
+		background: none;
+		padding: 0;
+		font-weight: 600;
+		color: var(--spk, var(--sl-color-white));
+		text-decoration: underline dotted;
+		text-underline-offset: 3px;
+		white-space: nowrap;
+	}
+	.panel .who small { font-weight: 400; color: var(--sl-color-gray-3); }
+	.panel .unsure { color: var(--ozen-warn); font-weight: 700; margin-inline-start: 0.2rem; }
+	.panel .text { cursor: text; border-radius: 4px; }
+	.panel .text:hover { background: var(--sl-color-gray-6); }
+	.panel .text[dir='rtl'] { text-align: right; }
+	.panel .text input { width: 100%; font: inherit; color: inherit; background: var(--sl-color-gray-6); border: 1px solid var(--sl-color-accent); border-radius: 4px; padding: 0 0.3rem; }
+	.panel .menu {
+		position: absolute;
+		z-index: 5;
+		min-width: 13rem;
+		background: var(--sl-color-gray-6);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 10px;
+		padding: 0.3rem;
+		box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.5);
+		display: grid;
+	}
+	.panel .menu button { text-align: start; background: none; border: none; color: var(--sl-color-white); padding: 0.35rem 0.6rem; border-radius: 6px; }
+	.panel .menu button:hover, .panel .menu button:focus-visible { background: var(--sl-color-accent-low); }
+	.panel .menu .new-name { width: 100%; margin: 0.2rem 0; font: inherit; color: inherit; background: var(--sl-color-black); border: 1px solid var(--sl-color-gray-5); border-radius: 6px; padding: 0.3rem 0.6rem; }
+	.panel .menu hr { border: none; border-top: 1px solid var(--sl-color-gray-5); margin: 0.25rem 0; }
+	.panel .menu .label { font-size: 0.75rem; color: var(--sl-color-gray-3); padding: 0.2rem 0.6rem; }
+	.panel .timeline { margin-top: 0.8rem; display: grid; gap: 0.5rem; }
+	.panel .lane { display: grid; grid-template-columns: 8rem 1fr; gap: 0.6rem; align-items: center; }
+	.panel .lane-name { font-weight: 600; color: var(--spk); font-size: 0.85rem; }
+	.panel .lane-name small { display: block; font-weight: 400; color: var(--sl-color-gray-3); }
+	.panel .track { position: relative; height: 1.3rem; background: var(--sl-color-gray-6); border-radius: 6px; }
+	.panel .seg { position: absolute; top: 0.2rem; bottom: 0.2rem; border-radius: 4px; background: var(--spk); }
+	.panel .toast {
+		min-height: 1.4rem;
+		margin-top: 0.7rem;
+		font-size: 0.85rem;
+		color: var(--sl-color-accent-high);
+		transition: opacity 0.3s;
+	}
+	@media (max-width: 30rem) {
+		.panel .lines li { grid-template-columns: auto 1fr; gap: 0.1rem 0.5rem; }
+		.panel .who { justify-self: start; }
+		.panel .text { grid-column: 1 / -1; }
+		.panel .lane { grid-template-columns: 1fr; }
+	}
+</style>
+
+<script>
+	type Line = { t: number; voice: string; src: 'call' | 'room'; text: string; unsure?: boolean };
+	const COLORS = ['#7c9cff', '#3fc59b', '#f0a35e', '#d67bff', '#5ec8f0', '#ff7b9c'];
+	const KNOWN = ['Ofek Gabay', 'Dana Levi', 'Yossi Cohen'];
+
+	function start(root: HTMLElement) {
+		const lines: Line[] = [
+			{ t: 0, voice: 'S1', src: 'call', text: 'Morning everyone, can you hear me?' },
+			{ t: 6, voice: 'Me', src: 'room', text: 'כן, שומעים מצוין' },
+			{ t: 11, voice: 'S1', src: 'call', text: "Great. Let's go over the launch plan." },
+			{ t: 19, voice: 'S2', src: 'call', text: 'I merged the פי אר last night, it is live on staging.' },
+			{ t: 28, voice: 'S3', src: 'room', text: '…and now the weather in Tel Aviv: sunny, 31 degrees.' },
+			{ t: 35, voice: 'S1', src: 'call', text: 'Nice, so we can ship on Thursday?', unsure: true },
+			{ t: 42, voice: 'Me', src: 'room', text: 'Thursday works for me.' },
+			{ t: 48, voice: 'S2', src: 'call', text: "I'll send the release notes after this call.", unsure: true },
+		];
+		const names: Record<string, string> = { Me: 'Ofek Gabay' };
+		const ignored = new Set<string>();
+		const $ = (s: string) => root.querySelector(s) as HTMLElement;
+		const list = $('[data-view="transcript"]');
+		const timeline = $('[data-view="timeline"]');
+		const menu = $('[data-menu]');
+		const toast = $('[data-toast]');
+		const review = $('[data-review]') as HTMLButtonElement;
+		let state = 'recording';
+		let toastTimer = 0;
+
+		const label = (v: string) => names[v] ?? v;
+		const color = (v: string) => COLORS[[...new Set(lines.map((l) => label(l.voice)))].indexOf(label(v)) % COLORS.length];
+		const fmt = (s: number) => `10:0${Math.floor(s / 60) + 2}:${String(s % 60).padStart(2, '0')}`;
+
+		function say(msg: string) {
+			toast.textContent = msg;
+			clearTimeout(toastTimer);
+			toastTimer = window.setTimeout(() => (toast.textContent = ''), 6000);
+		}
+
+		function flash(v: string) {
+			list.querySelectorAll<HTMLElement>(`li[data-voice="${v}"]`).forEach((li) => {
+				li.classList.add('flash');
+				setTimeout(() => li.classList.remove('flash'), 900);
+			});
+		}
+
+		function render() {
+			root.dataset.state = state;
+			$('[data-status]').textContent =
+				state === 'recording' ? 'Recording' : state === 'paused' ? 'Not recording · paused' : 'Not recording';
+			$('[data-pause]').textContent = state === 'paused' ? 'Resume' : state === 'stopped' ? 'Start' : 'Pause';
+			($('[data-stop]') as HTMLButtonElement).disabled = state === 'stopped';
+
+			list.replaceChildren(
+				...lines.map((l, i) => {
+					const li = document.createElement('li');
+					li.dataset.voice = l.voice;
+					li.classList.toggle('ignored', ignored.has(l.voice));
+					li.style.setProperty('--spk', color(l.voice));
+					const time = document.createElement('span');
+					time.className = 'time';
+					time.textContent = fmt(l.t);
+					const who = document.createElement('button');
+					who.className = 'who';
+					who.dataset.i = String(i);
+					who.append(ignored.has(l.voice) ? 'Ignored' : label(l.voice));
+					const src = document.createElement('small');
+					src.textContent = ` (${l.src})`;
+					who.append(src);
+					const text = document.createElement('span');
+					text.className = 'text';
+					text.dataset.i = String(i);
+					text.dir = /[֐-׿]/.test(l.text) && !/[a-z]{4}/i.test(l.text) ? 'rtl' : 'auto';
+					text.textContent = l.text;
+					text.title = 'Click to fix';
+					if (l.unsure && !names[l.voice]) {
+						const q = document.createElement('span');
+						q.className = 'unsure';
+						q.textContent = '?';
+						q.title = 'ozen is not sure who said this';
+						who.append(q);
+					}
+					li.append(time, who, text);
+					return li;
+				}),
+			);
+
+			const unsure = lines.filter((l) => l.unsure && !names[l.voice] && !ignored.has(l.voice));
+			review.hidden = unsure.length === 0;
+			review.textContent = `Review ${unsure.length}`;
+
+			const lanes = new Map<string, Line[]>();
+			for (const l of lines) if (!ignored.has(l.voice)) lanes.set(label(l.voice), [...(lanes.get(label(l.voice)) ?? []), l]);
+			timeline.replaceChildren(
+				...[...lanes].map(([name, ls]) => {
+					const lane = document.createElement('div');
+					lane.className = 'lane';
+					lane.style.setProperty('--spk', color(ls[0].voice));
+					const n = document.createElement('div');
+					n.className = 'lane-name';
+					n.textContent = name;
+					const total = document.createElement('small');
+					total.textContent = `${ls.length * 5}s talk time`;
+					n.append(total);
+					const track = document.createElement('div');
+					track.className = 'track';
+					for (const l of ls) {
+						const seg = document.createElement('span');
+						seg.className = 'seg';
+						seg.style.left = `${(l.t / 55) * 100}%`;
+						seg.style.width = `${(5 / 55) * 100}%`;
+						seg.title = l.text;
+						track.append(seg);
+					}
+					lane.append(n, track);
+					return lane;
+				}),
+			);
+		}
+
+		function openMenu(anchor: HTMLElement, i: number) {
+			const v = lines[i].voice;
+			const count = lines.filter((l) => l.voice === v).length;
+			const items: (HTMLElement | string)[] = [];
+			const label_ = document.createElement('div');
+			label_.className = 'label';
+			label_.textContent = 'Who said this?';
+			items.push(label_);
+			for (const name of KNOWN) items.push(action(name, () => tag(v, name)));
+			const form = document.createElement('form');
+			const field = document.createElement('input');
+			field.placeholder = 'New name, then Enter';
+			field.className = 'new-name';
+			form.append(field);
+			form.addEventListener('submit', (e) => {
+				e.preventDefault();
+				if (!field.value.trim()) return;
+				menu.hidden = true;
+				tag(v, field.value.trim());
+				render();
+			});
+			items.push(form);
+			items.push(document.createElement('hr'));
+			items.push(action(`Ignore all ${count} lines by ${label(v)}`, () => {
+				ignored.add(v);
+				delete names[v];
+				say(`Ignored. ozen won't write this voice again — handy for a video playing nearby.`);
+			}));
+			if (names[v] || ignored.has(v))
+				items.push(action('Clear tag', () => {
+					delete names[v];
+					ignored.delete(v);
+					say('Tag cleared.');
+				}));
+			menu.replaceChildren(...items);
+			const r = anchor.getBoundingClientRect();
+			const p = root.getBoundingClientRect();
+			menu.style.top = `${r.bottom - p.top + 4}px`;
+			menu.style.left = `${Math.min(r.left - p.left, p.width - 220)}px`;
+			menu.hidden = false;
+			(menu.querySelector('button') as HTMLElement)?.focus();
+		}
+
+		function action(text: string, fn: () => void) {
+			const b = document.createElement('button');
+			b.role = 'menuitem';
+			b.textContent = text;
+			b.addEventListener('click', () => {
+				menu.hidden = true;
+				fn();
+				render();
+			});
+			return b;
+		}
+
+		function tag(v: string, name: string) {
+			const n = lines.filter((l) => l.voice === v).length;
+			names[v] = name;
+			ignored.delete(v);
+			say(`Got it. ozen learned ${name}'s voice and relabeled ${n} line${n > 1 ? 's' : ''} — and will recognize them next meeting.`);
+			requestAnimationFrame(() => flash(v));
+		}
+
+		function edit(span: HTMLElement, i: number) {
+			if (span.querySelector('input')) return;
+			const before = lines[i].text;
+			const input = document.createElement('input');
+			input.value = before;
+			input.dir = span.dir;
+			span.replaceChildren(input);
+			input.focus();
+			input.select();
+			let done = false;
+			const commit = (save: boolean) => {
+				if (done) return;
+				done = true;
+				const after = input.value.trim();
+				if (save && after && after !== before) {
+					lines[i].text = after;
+					const old = new Set(before.split(/\s+/));
+					const learned = after.split(/\s+/).filter((w) => !old.has(w)).map((w) => w.replace(/[.,!?]/g, ''));
+					say(learned.length
+						? `Fixed. ozen will now hint “${learned.join(' ')}” to the transcriber. Fix the same mistake twice and it corrects it by itself.`
+						: 'Fixed.');
+				}
+				render();
+			};
+			input.addEventListener('keydown', (e) => {
+				if (e.key === 'Enter') commit(true);
+				if (e.key === 'Escape') commit(false);
+			});
+			input.addEventListener('blur', () => commit(true));
+		}
+
+		root.addEventListener('click', (e) => {
+			const t = e.target as HTMLElement;
+			const who = t.closest<HTMLElement>('.who');
+			const text = t.closest<HTMLElement>('.text');
+			if (who) return openMenu(who, Number(who.dataset.i));
+			if (!t.closest('[data-menu]')) menu.hidden = true;
+			if (text) return edit(text, Number(text.dataset.i));
+			const tab = t.closest<HTMLElement>('[data-tab]');
+			if (tab) {
+				root.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b === tab)));
+				list.hidden = tab.dataset.tab !== 'transcript';
+				timeline.hidden = tab.dataset.tab !== 'timeline';
+			}
+			if (t.closest('[data-pause]')) {
+				state = state === 'recording' ? 'paused' : 'recording';
+				say(state === 'paused' ? 'Paused. The transcriber stays loaded, so Resume is instant.' : 'Recording.');
+				render();
+			}
+			if (t.closest('[data-stop]')) {
+				state = 'stopped';
+				say('Stopped. In the real app ozen first finishes transcribing what it already heard.');
+				render();
+			}
+			if (t.closest('[data-review]')) {
+				const i = lines.findIndex((l) => l.unsure && !names[l.voice] && !ignored.has(l.voice));
+				const btn = list.querySelector<HTMLElement>(`.who[data-i="${i}"]`);
+				if (btn) {
+					list.hidden = false;
+					timeline.hidden = true;
+					root.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String((b as HTMLElement).dataset.tab === 'transcript')));
+					openMenu(btn, i);
+				}
+			}
+		});
+		root.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') menu.hidden = true;
+		});
+		render();
+	}
+
+	document.querySelectorAll<HTMLElement>('[data-panel-demo]').forEach(start);
+</script>

@@ -1,0 +1,22 @@
+---
+title: Using several Macs
+description: Share the people ozen knows between your Macs.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Install ozen on each Mac with the same voices repository ([Install, step 6](/start/install/#setup)). Then:
+
+- a person you name on one Mac is recognized on the others within a few minutes,
+- naming people on two Macs at the same time is fine; neither is lost,
+- names you add while offline are shared once you're back online.
+
+## What's shared, and what isn't
+
+Only **names and voiceprints** travel between your Macs. Transcripts, fixes, places and ignored voices stay on
+the Mac where they happened.
+
+<Aside type="caution">
+Don't edit the files in `~/ozen/voices` yourself. ozen rebuilds that folder regularly and your changes would be
+lost. To change who's who, name lines in the panel.
+</Aside>

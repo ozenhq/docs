@@ -1,0 +1,149 @@
+---
+// Shows, on an example day, when each record mode (and a Home place) records.
+---
+
+<div class="demo modes not-content" data-mode-demo>
+	<div class="controls">
+		<div class="seg" role="radiogroup" aria-label="Record mode">
+			<button role="radio" aria-checked="false" data-mode="always">Always</button>
+			<button role="radio" aria-checked="true" data-mode="meetings">Meetings</button>
+		</div>
+		<label class="place"><input type="checkbox" data-home /> Home place set to <b>Auto off</b></label>
+	</div>
+	<div class="day">
+		<div class="row events" data-events></div>
+		<div class="row rec" data-rec aria-hidden="true"></div>
+		<div class="row axis" data-axis aria-hidden="true"></div>
+	</div>
+	<p class="summary" data-summary aria-live="polite"></p>
+</div>
+<p class="demo-caption">An example day. Pick a mode and see when ozen records (red).</p>
+
+<style is:global>
+	.modes [hidden] { display: none !important; }
+	.modes .controls { display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; align-items: center; }
+	.modes .seg { display: inline-flex; border: 1px solid var(--sl-color-gray-5); border-radius: 999px; padding: 3px; background: var(--sl-color-gray-6); }
+	.modes .seg button { border: none; background: none; color: var(--sl-color-gray-2); padding: 0.3rem 1rem; border-radius: 999px; }
+	.modes .seg [aria-checked='true'] { background: var(--sl-color-accent); color: #fff; }
+	.modes .place { display: inline-flex; gap: 0.4rem; align-items: center; color: var(--sl-color-gray-2); }
+	.modes .day { margin-top: 1.2rem; display: grid; gap: 0.35rem; }
+	.modes .row { position: relative; }
+	.modes .events { height: 1.6rem; margin-top: 2.6rem; }
+	.modes .rec { height: 0.8rem; background: var(--sl-color-gray-6); border-radius: 999px; overflow: hidden; }
+	.modes .axis { height: 1rem; font-size: 0.72rem; color: var(--sl-color-gray-3); }
+	.modes .ev {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		border-radius: 8px;
+		font-size: 0.75rem;
+		border: 1px solid var(--sl-color-gray-5);
+		background: var(--sl-color-gray-6);
+		color: var(--sl-color-gray-2);
+	}
+	.modes .ev.meet { border-color: #7c9cff; background: color-mix(in srgb, #7c9cff 18%, transparent); }
+	.modes .ev.home { border-style: dashed; background: transparent; }
+	.modes .ev span { position: absolute; bottom: calc(100% + 0.2rem); left: 0; white-space: nowrap; color: var(--sl-color-gray-2); }
+	.modes .ev.end span { left: auto; right: 0; }
+	.modes .ev.end span::before { left: auto; right: 0.3rem; }
+	.modes .ev.up span { bottom: calc(100% + 1.4rem); }
+	.modes .ev span::before { content: ''; position: absolute; left: 0.3rem; top: 100%; height: 2rem; border-left: 1px dotted var(--sl-color-gray-4); }
+	.modes .ev.up span::before { height: 3.2rem; }
+	.modes .ev:not(.up) span::before { height: 0.2rem; }
+	.modes .band { position: absolute; top: 0; bottom: 0; background: var(--ozen-rec); border-radius: 999px; transition: all 0.35s ease; }
+	.modes .tick { position: absolute; transform: translateX(-50%); }
+	.modes .summary { margin-top: 0.9rem !important; }
+	.modes .ev span b { font-weight: 400; }
+	.modes .ev .short { display: none; }
+	@media (max-width: 40rem) { .modes .ev .long { display: none; } .modes .ev .short { display: inline; } }
+	.modes .tick:first-child { transform: none; }
+	.modes .tick:last-child { transform: translateX(-100%); }
+</style>
+
+<script>
+	const H0 = 8, H1 = 20;
+	// Times in hours. meet: a meeting app is using the microphone.
+	const EVENTS = [
+		{ from: 9, to: 9.75, label: 'Zoom stand-up', short: 'Zoom', meet: true },
+		{ from: 11, to: 11.5, label: 'Chat at your desk', short: 'Chat', up: true },
+		{ from: 13, to: 14, label: 'Teams call', short: 'Teams', meet: true },
+		{ from: 15, to: 15.5, label: 'YouTube video', short: 'Video', up: true },
+		{ from: 17.5, to: 20, label: 'Home', short: 'Home', home: true },
+		{ from: 19, to: 19.5, label: 'Meet with family', short: 'Family', meet: true, up: true },
+	];
+	const START = 8.5; // you press Start in the morning
+	const HOME = 17.5;
+
+	document.querySelectorAll<HTMLElement>('[data-mode-demo]').forEach((root) => {
+		let mode = 'meetings';
+		const pct = (h: number) => `${((h - H0) / (H1 - H0)) * 100}%`;
+		const q = (s: string) => root.querySelector(s) as HTMLElement;
+		const home = q('[data-home]') as HTMLInputElement;
+
+		q('[data-events]').replaceChildren(
+			...EVENTS.map((e) => {
+				const d = document.createElement('div');
+				d.className = `ev${e.meet ? ' meet' : ''}${e.home ? ' home' : ''}${e.up ? ' up' : ''}${e.from > 18 ? ' end' : ''}`;
+				d.style.left = pct(e.from);
+				d.style.width = `calc(${pct(e.to)} - ${pct(e.from)})`;
+				if (e.home) d.style.zIndex = '0';
+				else d.style.zIndex = '1';
+				const s = document.createElement('span');
+				s.innerHTML = '<b class="long"></b><b class="short"></b>';
+				(s.firstChild as HTMLElement).textContent = e.label;
+				(s.lastChild as HTMLElement).textContent = e.short;
+				d.title = e.label;
+				d.append(s);
+				return d;
+			}),
+		);
+		q('[data-axis]').replaceChildren(
+			...[8, 10, 12, 14, 16, 18, 20].map((h) => {
+				const t = document.createElement('span');
+				t.className = 'tick';
+				t.style.left = pct(h);
+				t.textContent = `${h}:00`;
+				return t;
+			}),
+		);
+
+		function spans(): [number, number][] {
+			const raw: [number, number][] =
+				mode === 'always' ? [[START, H1]] : EVENTS.filter((e) => e.meet).map((e) => [e.from, e.to]);
+			if (!home.checked) return raw;
+			return raw.map(([a, b]) => [a, Math.min(b, HOME)] as [number, number]).filter(([a, b]) => b > a);
+		}
+
+		function render() {
+			root.querySelectorAll('[data-mode]').forEach((b) =>
+				b.setAttribute('aria-checked', String((b as HTMLElement).dataset.mode === mode)),
+			);
+			const s = spans();
+			q('[data-rec]').replaceChildren(
+				...s.map(([a, b]) => {
+					const d = document.createElement('div');
+					d.className = 'band';
+					d.style.left = pct(a);
+					d.style.width = `calc(${pct(b)} - ${pct(a)})`;
+					return d;
+				}),
+			);
+			const mins = Math.round(s.reduce((n, [a, b]) => n + (b - a), 0) * 60);
+			const hm = `${Math.floor(mins / 60)}h ${mins % 60}m`;
+			q('[data-summary]').textContent =
+				mode === 'always'
+					? `Records ${hm}: everything from when you press Start, including the chat at your desk and the video${home.checked ? ', until you get home' : ' and your evening at home'}.`
+					: `Records ${hm}: only while a meeting app uses your microphone${home.checked ? ', and nothing once you are home — the family call stays private' : ', including the family call at home'}. It starts and stops by itself.`;
+		}
+
+		root.addEventListener('click', (e) => {
+			const b = (e.target as HTMLElement).closest<HTMLElement>('[data-mode]');
+			if (b) {
+				mode = b.dataset.mode!;
+				render();
+			}
+		});
+		home.addEventListener('change', render);
+		render();
+	});
+</script>

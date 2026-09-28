@@ -1,0 +1,39 @@
+---
+title: Fixing the transcript
+description: Correct misheard words and teach ozen names and terms.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Fixing a line
+
+Click the text of any line in the panel, type the right words, and press <kbd>Return</kbd>. To undo, clear the
+text and press <kbd>Return</kbd>; the original comes back.
+
+## ozen learns from your fixes
+
+- **New words.** Names, product terms and jargon you type in a fix are remembered, and ozen listens for them in
+  every new line.
+- **Repeated mistakes.** Fix the same thing the same way twice, like "פי אר" to "PR", and ozen fixes it by itself
+  from then on.
+- **Undo a bad habit.** If ozen starts "fixing" something that was right, correct it back. It notices and stops.
+
+## Teaching words ahead of time
+
+Names and terms ozen should spell right live in a plain list: **`vocab.txt`** in your ozen folder. Open it with:
+
+```sh
+open -e ~/ozen/vocab.txt
+```
+
+Add words separated by commas or one per line, and save. ozen reads it continuously. The names of people you've
+tagged are included automatically.
+
+<Aside type="tip">
+English words said in the middle of Hebrew are the hardest for ozen. If you use a term often, add it to the list.
+</Aside>
+
+## Hebrew and English
+
+ozen decides for every sentence whether it's Hebrew or English, and uses a speech model trained for that language.
+Mixed sentences work, with the English-in-Hebrew caveat above.

@@ -1,0 +1,34 @@
+---
+title: Privacy
+description: What stays on your Mac, what doesn't, and your responsibilities when recording.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import PrivacyMap from '../../../components/PrivacyMap.astro';
+
+ozen is built so your meetings stay yours. Speech is transcribed and voices are recognized on your Mac. No bot
+joins your call, and no audio is uploaded.
+
+## Where your data goes
+
+<PrivacyMap />
+
+## Recording other people
+
+<Aside type="caution" title="Your responsibility">
+ozen records and transcribes other people. **Tell participants you're recording, and follow your local laws.**
+In some places everyone must agree to be recorded.
+</Aside>
+
+- In **Always** mode, ozen hears everything near your Mac, not only meetings. Use **Meetings** mode or
+  [places](/guides/recording/#places) to limit it.
+- Voiceprints are sensitive personal data, like a fingerprint. Only name people who are fine with it, and keep
+  your voices repository private.
+
+## Removing data
+
+- **One meeting or some lines:** ask an [AI assistant](/guides/ai/) connected to ozen to delete them, or use the
+  [MCP tools](/developers/mcp/).
+- **A person:** clear their name everywhere with the `delete_person` [MCP tool](/developers/mcp/), and remove
+  them from your voices repository so your other Macs forget them too.
+- **Everything:** quit ozen and delete the `ozen` folder in your home folder.
